@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preparando sua compra - Mercado Livre</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Proxima Nova", -apple-system, Roboto, Arial, sans-serif;
+            background-color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        
+        .loading-container {
+            text-align: center;
+        }
+        
+        .loading-text {
+            font-size: 20px;
+            color: rgba(0,0,0,.9);
+            margin-bottom: 24px;
+            font-weight: 400;
+        }
+        
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #e6e6e6;
+            border-top: 4px solid #3483fa;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .loading-text {
+                font-size: 18px;
+                padding: 0 20px;
+            }
+            
+            .spinner {
+                width: 40px;
+                height: 40px;
+                border-width: 3px;
+            }
+        }
+    </style>
+    <script>
+        // Redireciona para a página de seguro após 2 segundos
+        setTimeout(function() {
+            window.location.href = 'seguro.html';
+        }, 2000);
+    </script>
+</head>
+<body>
+    <div class="loading-container">
+        <p class="loading-text">Preparando tudo para sua compra</p>
+        <div class="spinner"></div>
+    </div>
+</body>
+</html>
+

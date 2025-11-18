@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escolha quando sua compra chegará - Mercado Livre</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Proxima Nova", -apple-system, Roboto, Arial, sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .nav-header {
+            background-color: #fff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            border-bottom: 1px solid #e6e6e6;
+        }
+        
+        .nav-header .nav-bounds {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .back-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .back-arrow {
+            width: 16px;
+            height: 16px;
+            border-left: 1.5px solid rgba(0,0,0,.7);
+            border-bottom: 1.5px solid rgba(0,0,0,.7);
+            transform: rotate(45deg);
+        }
+        
+        .header-title {
+            font-size: 16px;
+            font-weight: 400;
+            color: rgba(0,0,0,.9);
+            flex: 1;
+        }
+        
+        .info-banner {
+            background-color: #fff59d;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            border-radius: 4px;
+        }
+        
+        .info-icon {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: rgba(0,0,0,.15);
+            color: rgba(0,0,0,.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .info-text {
+            font-size: 13px;
+            color: rgba(0,0,0,.6);
+            line-height: 1.4;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 16px;
+            padding-bottom: 120px;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        .shipping-section {
+            background-color: #fff;
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        
+        .section-title {
+            font-size: 15px;
+            font-weight: 400;
+            color: rgba(0,0,0,.9);
+        }
+        
+        .full-badge {
+            background-color: #00a650;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 5px;
+            border-radius: 3px;
+            text-transform: uppercase;
+        }
+        
+        .delivery-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .delivery-option {
+            border: 1px solid #e6e6e6;
+            border-radius: 4px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+            background-color: #fff;
+        }
+        
+        .delivery-option:hover {
+            border-color: #3483fa;
+        }
+        
+        .delivery-option.selected {
+            border-color: #3483fa;
+            border-width: 2px;
+        }
+        
+        .radio-button {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e6e6e6;
+            border-radius: 50%;
+            position: relative;
+            flex-shrink: 0;
+        }
+        
+        .delivery-option.selected .radio-button {
+            border-color: #3483fa;
+        }
+        
+        .radio-button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background-color: #3483fa;
+            border-radius: 50%;
+            display: none;
+        }
+        
+        .delivery-option.selected .radio-button::after {
+            display: block;
+        }
+        
+        .delivery-option-content {
+            flex: 1;
+        }
+        
+        .delivery-option-title {
+            font-size: 16px;
+            font-weight: 400;
+            color: rgba(0,0,0,.9);
+            margin-bottom: 4px;
+        }
+        
+        .delivery-option.selected .delivery-option-title {
+            color: rgba(0,0,0,.9);
+            font-weight: 600;
+        }
+        
+        .delivery-fast {
+            font-weight: 600;
+            color: rgba(0,0,0,.9);
+        }
+        
+        .delivery-day {
+            color: #00a650;
+            font-weight: 600;
+        }
+        
+        .delivery-option.selected .delivery-day {
+            color: #00a650;
+            font-weight: 600;
+        }
+        
+        .delivery-option-subtitle {
+            font-size: 14px;
+            color: #3483fa;
+            margin-top: 4px;
+            font-weight: 400;
+        }
+        
+        .delivery-price {
+            font-size: 16px;
+            font-weight: 400;
+            color: #00a650;
+            flex-shrink: 0;
+        }
+        
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            border-top: 1px solid #e6e6e6;
+            padding: 16px;
+            box-shadow: 0 -2px 8px rgba(0,0,0,.1);
+        }
+        
+        .shipping-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .shipping-label {
+            font-size: 16px;
+            color: rgba(0,0,0,.9);
+        }
+        
+        .shipping-value {
+            font-size: 16px;
+            font-weight: 400;
+            color: #00a650;
+        }
+        
+        .continue-button {
+            width: 100%;
+            background-color: #3483fa;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 400;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .continue-button:hover {
+            background-color: #2968c8;
+        }
+        
+        .continue-button:active {
+            background-color: #1f4e96;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-header {
+                height: 60px;
+                padding: 0 16px;
+            }
+            
+            .header-title {
+                font-size: 16px;
+            }
+            
+            .info-banner {
+                padding: 10px 16px;
+            }
+            
+            .info-text {
+                font-size: 13px;
+            }
+            
+            .main-content {
+                padding: 16px;
+                padding-bottom: 120px;
+            }
+            
+            .shipping-section {
+                padding: 16px;
+            }
+            
+            .delivery-option {
+                padding: 16px;
+            }
+            
+            .delivery-option-title {
+                font-size: 15px;
+            }
+            
+            .delivery-price {
+                font-size: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-title {
+                font-size: 15px;
+            }
+            
+            .section-title {
+                font-size: 15px;
+            }
+            
+            .delivery-option {
+                padding: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="nav-header">
+        <div class="nav-bounds">
+            <button class="back-button" onclick="window.history.back()">
+                <div class="back-arrow"></div>
+            </button>
+            <h1 class="header-title">Escolha quando sua compra chegará</h1>
+        </div>
+    </header>
+    
+    <div class="info-banner">
+        <div class="info-icon">i</div>
+        <p class="info-text">Informe seu endereço na próxima etapa</p>
+    </div>
+    
+    <main class="main-content">
+        <div class="shipping-section">
+            <div class="section-header">
+                <h2 class="section-title">Envio 1</h2>
+                <span class="full-badge">FULL</span>
+            </div>
+            
+            <div class="delivery-options">
+                <div class="delivery-option selected" onclick="selectDelivery(this)">
+                    <div class="radio-button"></div>
+                    <div class="delivery-option-content">
+                        <div class="delivery-option-title"><span class="delivery-fast">Rápido</span> <span class="delivery-day">Amanhã</span></div>
+                    </div>
+                    <div class="delivery-price">Grátis</div>
+                </div>
+                
+                <div class="delivery-option" onclick="selectDelivery(this)">
+                    <div class="radio-button"></div>
+                    <div class="delivery-option-content">
+                        <div class="delivery-option-title">Quinta-feira</div>
+                    </div>
+                    <div class="delivery-price">Grátis</div>
+                </div>
+                
+                <div class="delivery-option" onclick="selectDelivery(this)">
+                    <div class="radio-button"></div>
+                    <div class="delivery-option-content">
+                        <div class="delivery-option-title">Seu dia de entregas</div>
+                        <div class="delivery-option-subtitle">Escolher dia</div>
+                    </div>
+                    <div class="delivery-price">Grátis</div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <div class="shipping-summary">
+            <span class="shipping-label">Frete</span>
+            <span class="shipping-value">Grátis</span>
+        </div>
+        <button class="continue-button" onclick="window.location.href='endereco.html'">Continuar</button>
+    </footer>
+    
+    <script>
+        function selectDelivery(element) {
+            // Remove selected class from all options
+            document.querySelectorAll('.delivery-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            element.classList.add('selected');
+        }
+    </script>
+</body>
+</html>
+

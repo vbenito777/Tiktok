@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento Aprovado - Mercado Livre</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Proxima Nova", -apple-system, Roboto, Arial, sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .success-container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,.1);
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background-color: #00a650;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .success-icon::before {
+            content: '✓';
+            color: #fff;
+            font-size: 48px;
+            font-weight: bold;
+        }
+        
+        .success-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: rgba(0,0,0,.9);
+            margin-bottom: 12px;
+        }
+        
+        .success-message {
+            font-size: 16px;
+            color: rgba(0,0,0,.7);
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+        
+        .success-details {
+            background-color: #f5f5f5;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        
+        .detail-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .detail-label {
+            color: rgba(0,0,0,.6);
+        }
+        
+        .detail-value {
+            color: rgba(0,0,0,.9);
+            font-weight: 500;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 12px;
+            flex-direction: column;
+        }
+        
+        .btn {
+            padding: 14px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background-color: #3483fa;
+            color: #fff;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2968c8;
+        }
+        
+        .btn-secondary {
+            background-color: #fff;
+            color: #3483fa;
+            border: 1px solid #3483fa;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #f5f5f5;
+        }
+        
+        @media (max-width: 480px) {
+            .success-container {
+                padding: 24px;
+            }
+            
+            .success-title {
+                font-size: 20px;
+            }
+            
+            .success-message {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-icon"></div>
+        
+        <h1 class="success-title">Pagamento Aprovado!</h1>
+        
+        <p class="success-message">
+            Seu pagamento foi processado com sucesso. Você receberá um e-mail de confirmação em breve.
+        </p>
+        
+        <div class="success-details" id="paymentDetails">
+            <div class="detail-item">
+                <span class="detail-label">Status:</span>
+                <span class="detail-value" id="status">Aprovado</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Valor:</span>
+                <span class="detail-value" id="amount">R$ 0,00</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Método:</span>
+                <span class="detail-value" id="method">-</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">ID da Transação:</span>
+                <span class="detail-value" id="transactionId" style="font-size: 12px; word-break: break-all;">-</span>
+            </div>
+        </div>
+        
+        <div class="button-group">
+            <a href="index.html" class="btn btn-primary">Continuar Comprando</a>
+            <a href="#" class="btn btn-secondary" onclick="window.print(); return false;">Imprimir Comprovante</a>
+        </div>
+    </div>
+    
+    <script>
+        // Recuperar dados do pagamento do localStorage ou URL
+        function loadPaymentData() {
+            // Tentar obter da URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const transactionId = urlParams.get('transaction_id') || urlParams.get('id');
+            const amount = urlParams.get('amount');
+            const method = urlParams.get('method');
+            const status = urlParams.get('status');
+            
+            // Tentar obter do localStorage
+            const storedPayment = localStorage.getItem('lastPayment');
+            
+            if (storedPayment) {
+                try {
+                    const payment = JSON.parse(storedPayment);
+                    
+                    if (payment.transaction_id) {
+                        document.getElementById('transactionId').textContent = payment.transaction_id;
+                    }
+                    
+                    if (payment.amount) {
+                        document.getElementById('amount').textContent = 
+                            new Intl.NumberFormat('pt-BR', {
+                                style: 'currency',
+                                currency: 'BRL'
+                            }).format(payment.amount);
+                    }
+                    
+                    if (payment.payment_method) {
+                        const methodNames = {
+                            'PIX': 'PIX',
+                            'CREDIT_CARD': 'Cartão de Crédito',
+                            'credit_card': 'Cartão de Crédito',
+                            'pix': 'PIX'
+                        };
+                        document.getElementById('method').textContent = 
+                            methodNames[payment.payment_method] || payment.payment_method;
+                    }
+                    
+                    if (payment.status) {
+                        const statusNames = {
+                            'approved': 'Aprovado',
+                            'APPROVED': 'Aprovado',
+                            'pending': 'Pendente',
+                            'PENDING': 'Pendente'
+                        };
+                        document.getElementById('status').textContent = 
+                            statusNames[payment.status] || payment.status;
+                    }
+                } catch (e) {
+                    console.error('Erro ao carregar dados do pagamento:', e);
+                }
+            } else if (transactionId) {
+                // Usar dados da URL
+                if (transactionId) {
+                    document.getElementById('transactionId').textContent = transactionId;
+                }
+                if (amount) {
+                    document.getElementById('amount').textContent = 
+                        new Intl.NumberFormat('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL'
+                        }).format(parseFloat(amount));
+                }
+                if (method) {
+                    document.getElementById('method').textContent = method;
+                }
+                if (status) {
+                    document.getElementById('status').textContent = status;
+                }
+            }
+        }
+        
+        // Carregar dados quando a página carregar
+        window.addEventListener('DOMContentLoaded', loadPaymentData);
+    </script>
+</body>
+</html>
+
