@@ -10,10 +10,10 @@ from pydantic import BaseModel
 from datetime import datetime
 import uuid
 
-from core.database import get_db
-from models.payment import Payment, PaymentStatus, PaymentMethod
-from models.plan import Plan
-from services.mercado_pago_service import MercadoPagoService
+from backend.core.database import get_db
+from backend.models.payment import Payment, PaymentStatus, PaymentMethod
+from backend.models.plan import Plan
+from backend.services.mercado_pago_service import MercadoPagoService
 
 router = APIRouter()
 
@@ -60,7 +60,7 @@ async def create_payment(data: PaymentCreate, db: AsyncSession = Depends(get_db)
     Criar novo pagamento com integração Mercado Pago
     """
     # Converter payment_method string para enum
-    from models.payment import PaymentMethod as PM
+    from backend.models.payment import PaymentMethod as PM
     if data.payment_method.upper() == 'PIX':
         payment_method_enum = PM.PIX
     elif data.payment_method.upper() == 'CREDIT_CARD':
@@ -90,7 +90,7 @@ async def create_payment(data: PaymentCreate, db: AsyncSession = Depends(get_db)
         description = data.description
     
     # Calcular taxas (se houver configuração)
-    from core.config import settings
+    from backend.core.config import settings
     fee = getattr(settings, 'TRANSACTION_FEE_FIXED', 0.0)
     net_amount = amount - fee
     

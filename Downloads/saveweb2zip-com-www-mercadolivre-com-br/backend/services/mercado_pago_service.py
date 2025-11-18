@@ -4,8 +4,8 @@
 
 import mercadopago
 from typing import Dict, Optional
-from core.config import settings
-from models.payment import PaymentMethod
+from backend.core.config import settings
+from backend.models.payment import PaymentMethod
 
 
 class MercadoPagoService:

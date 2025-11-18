@@ -3,7 +3,7 @@ Aplicação principal FastAPI
 """
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api.payments_example import router as payments_router
+from backend.api.payments_example import router as payments_router
 
 app = FastAPI(
     title="API de Pagamentos - Mercado Pago",
