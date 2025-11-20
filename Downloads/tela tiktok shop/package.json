@@ -4,9 +4,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm ci && vite build",
+    "build": "vite build",
     "preview": "vite preview",
-    "vercel-build": "npm ci && vite build"
+    "vercel-build": "npm install && vite build"
   },
   "dependencies": {
     "lucide-react": "^0.263.1",
